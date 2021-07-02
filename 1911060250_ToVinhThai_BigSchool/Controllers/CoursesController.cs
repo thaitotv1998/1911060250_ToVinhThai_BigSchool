@@ -18,6 +18,14 @@ namespace _1911060250_ToVinhThai_BigSchool.Controllers
             _dbContext = new ApplicationDbContext();
         }
         // GET: Courses
+        public ActionResult Create()
+        {
+            var viewModel = new CourseViewModel()
+            {
+                Categories = _dbContext.Categories.ToList()
+            };
+            return View(viewModel);
+        }
         [Authorize]
         [HttpPost]
         public ActionResult Create(CourseViewModel viewModel)
