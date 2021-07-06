@@ -18,6 +18,7 @@ namespace _1911060250_ToVinhThai_BigSchool.Controllers
             _dbContext = new ApplicationDbContext();
         }
         // GET: Courses
+        [Authorize]
         public ActionResult Create()
         {
             var viewModel = new CourseViewModel()
@@ -28,6 +29,7 @@ namespace _1911060250_ToVinhThai_BigSchool.Controllers
         }
         [Authorize]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Create(CourseViewModel viewModel)
         {
             if (!ModelState.IsValid)

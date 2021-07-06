@@ -9,6 +9,7 @@ namespace _1911060250_ToVinhThai_BigSchool.Models
     {
         public DbSet<Course> Courses { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Attendance> Attendances { get; set; }
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
@@ -17,6 +18,15 @@ namespace _1911060250_ToVinhThai_BigSchool.Models
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
+        }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Attendance>()
+                .HasRequired(a => a.Course)
+                .WithMany()
+                .WillCascadeOnDelete(false);
+            base.OnModelCreating(modelBuilder);
         }
     }
 }
