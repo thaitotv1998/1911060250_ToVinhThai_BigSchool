@@ -1,13 +1,12 @@
-﻿@model _1911060250_ToVinhThai_BigSchool.ViewModels.CourseViewModel
+﻿@model IEnumerable<_1911060250_ToVinhThai_BigSchool.Models.Course>
 @{
-    ViewBag.Title = "Attending";
+    ViewBag.Title = "Mine";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Attending</h2>
-
+<h2>Mine</h2>
 <ul class="course">
-    @foreach (var course in Model.UpcommingCourses)
+    @foreach (var course in Model)
     {
         <li>
             <div class="date">
@@ -21,18 +20,15 @@
             <div class="details">
                 <span class="lecturer">
                     @course.Lecturer.Name
-                    @if (Model.ShowAction)
-                    {
-                        <button class="btn btn-default btn-sm js-toggle-follow" data-user-id="@course.LecturerId">Follow</button>
-                    }
                 </span>
                 <span class="category">
                     @course.Category.Name
                 </span>
             </div>
+            <div class="action">
+                <a href="">Edit</a> |
+                <a href="">Delete</a>
+            </div>
         </li>
     }
 </ul>
-
-
-

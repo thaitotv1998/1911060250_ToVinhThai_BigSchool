@@ -1,5 +1,4 @@
-﻿@Styles.Render("~/Content/Site.css")
-@model _1911060250_ToVinhThai_BigSchool.ViewModels.CourseViewModel
+﻿@model _1911060250_ToVinhThai_BigSchool.ViewModels.CourseViewModel
 @{
     ViewBag.Title = "Home Page";
 }
@@ -39,9 +38,9 @@
     {
         <script>
             $(document).ready(function() {
-                $("js-toggle-attendance").click(function(e) {
+                $(".js-toggle-attendance").click(function(e) {
                     var button = $(e.target);
-                    $.post("/api/attendances", { courseId: button.Attr("data-course-id") })
+                    $.post("/api/attendances", { courseId: button.attr("data-course-id") })
                         .done(function() {
                             button
                                 .removeClass("btn-default")
@@ -53,9 +52,9 @@
                         });
                 });
 
-                $("js-toggle-follow").click(function(e) {
+                $(".js-toggle-follow").click(function(e) {
                     var button = $(e.target);
-                    $.post("/api/followings", { followeeId: button.Attr("data-user-id") })
+                    $.post("/api/followings", { followeeId: button.attr("data-user-id") })
                         .done(function() {
                             button.text("Following");
                         })

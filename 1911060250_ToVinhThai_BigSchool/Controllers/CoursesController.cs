@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using _1911060250_ToVinhThai_BigSchool.Models;
 using _1911060250_ToVinhThai_BigSchool.ViewModels;
 using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security;
 
 namespace _1911060250_ToVinhThai_BigSchool.Controllers
 {
@@ -69,6 +70,18 @@ namespace _1911060250_ToVinhThai_BigSchool.Controllers
             };
 
             return View(viewModel);
+        }
+
+        [Authorize]
+        public ActionResult Mine()
+        {
+            var userId = User.Identity.GetUserId();
+            var courses = _dbContext.Courses
+                .Where(c => c.LecturerId == userId && c.DateTime > DateTime.Now)
+                .Include(l => l.Lecturer)
+                .Include(c => c.Category)
+                .ToList();
+            return View(courses);
         }
     }
 }
