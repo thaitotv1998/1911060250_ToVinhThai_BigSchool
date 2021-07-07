@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using _1911060250_ToVinhThai_BigSchool.Models;
 using System.Data.Entity;
+using _1911060250_ToVinhThai_BigSchool.ViewModels;
 
 namespace _1911060250_ToVinhThai_BigSchool.Controllers
 {
@@ -23,7 +24,16 @@ namespace _1911060250_ToVinhThai_BigSchool.Controllers
                 .Include(c => c.Lecturer)
                 .Include(c => c.Category)
                 .Where(c => c.DateTime > DateTime.Now);
-            return View(upcommingCourses);
+
+            var viewModel = new CourseViewModel
+            {
+                UpcommingCourses = upcommingCourses,
+                ShowAction = User.Identity.IsAuthenticated
+            };
+
+            return View(viewModel);
+
+            
         }
     }
 }
