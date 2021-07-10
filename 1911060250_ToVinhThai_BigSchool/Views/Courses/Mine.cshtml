@@ -1,4 +1,5 @@
-﻿@model IEnumerable<_1911060250_ToVinhThai_BigSchool.Models.Course>
+﻿@using _1911060250_ToVinhThai_BigSchool.Models
+@model IEnumerable<_1911060250_ToVinhThai_BigSchool.Models.Course>
 @{
     ViewBag.Title = "Mine";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -26,7 +27,7 @@
                 </span>
             </div>
             <div class="action">
-                <a href="">Edit</a> |
+                <a href="@Url.Action("Edit", "Courses", new {id = course.Id})">Edit</a> |
                 <a href="">Delete</a>
             </div>
         </li>

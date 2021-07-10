@@ -11,6 +11,7 @@ namespace _1911060250_ToVinhThai_BigSchool.ViewModels
     {
         public IEnumerable<Course> UpcommingCourses { get; set; }
         public bool ShowAction { get; set; }
+        public int Id { get; set; }
         [Required]
         public string Place { get; set; }
         
@@ -23,6 +24,12 @@ namespace _1911060250_ToVinhThai_BigSchool.ViewModels
         [Required]
         public byte Category { get; set; }
         public IEnumerable<Category> Categories { get; set; }
+        public string Heading { get; set; }
+
+        public string Action
+        {
+            get { return (Id != 0) ? "Update" : "Create"; }
+        }
 
         public DateTime GeDateTime()
         {
