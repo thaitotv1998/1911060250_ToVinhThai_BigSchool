@@ -1,4 +1,6 @@
-﻿@model _1911060250_ToVinhThai_BigSchool.ViewModels.CourseViewModel
+﻿@using _1911060250_ToVinhThai_BigSchool.Models
+@using Microsoft.AspNet.Identity
+@model _1911060250_ToVinhThai_BigSchool.ViewModels.CourseViewModel
 @{
     ViewBag.Title = "Home Page";
 }
@@ -6,6 +8,8 @@
     <ul class="course">
         @foreach (var course in Model.UpcommingCourses)
         {
+            var User_ID = @User.Identity.GetUserId();
+            ApplicationDbContext _dbContext = new ApplicationDbContext();
             <li>
                 <div class="date">
                     <div class="month">
@@ -20,7 +24,15 @@
                         @course.Lecturer.Name
                         @if (Model.ShowAction)
                         {
-                            <button class="btn btn-default btn-sm js-toggle-follow" data-user-id="@course.LecturerId">Follow</button>
+                            bool isGoing = _dbContext.Followings.Any(a => a.FollowerId == User_ID && a.FollowerId == course.LecturerId);
+                            if (isGoing)
+                            {
+                                <button class="btn btn-danger btn-sm js-toggle-follow" data-user-id="@course.LecturerId">Following</button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-default btn-sm js-toggle-follow" data-user-id="@course.LecturerId">Follow</button> 
+                            }
                         }
                     </span>
                     <span class="category">
@@ -28,7 +40,19 @@
                     </span>
                     @if (Model.ShowAction)
                     {
-                        <button data-course-id="@course.Id" class="btn btn-default btn-sm js-toggle-attendance">Going?</button>
+                        
+                        bool isGoing = _dbContext.Attendances.Any(a => a.CourseId == course.Id && a.AttendeeId == User_ID);
+                        <div>
+                            @if (isGoing)
+                            {
+                                <button data-course-id="@course.Id" class="btn btn-default btn-sm js-toggle-attendance">Going?</button>
+                            }
+                            else
+                            {
+                                <button data-course-id="@course.Id" class="btn btn-info btn-sm js-toggle-attendance">Going</button>
+                            }
+                        </div>
+                        
                     }
                 </div>
             </li>
@@ -40,27 +64,62 @@
             $(document).ready(function() {
                 $(".js-toggle-attendance").click(function(e) {
                     var button = $(e.target);
-                    $.post("/api/attendances", { courseId: button.attr("data-course-id") })
-                        .done(function() {
-                            button
-                                .removeClass("btn-default")
-                                .addClass("btn-info")
-                                .text("Going");
-                        })
-                        .fail(function() {
-                            alert("Something failed!");
-                        });
+                    if (button.hasClass("btn-default")) {
+                        $.post("/api/attendances", { courseId: button.attr("data-course-id") })
+                            .done(function() {
+                                button
+                                    .removeClass("btn-default")
+                                    .addClass("btn-info")
+                                    .text("Going");
+                            })
+                            .fail(function() {
+                                alert("Something failed!");
+                            });
+                    } else {
+                        $.ajax({
+                                url: "/api/attendances/" + button.attr("data-course-id"),
+                                method: "DELETE"
+                            })
+                            .done(function() {
+                                button
+                                    .removeClass("btn-info")
+                                    .addClass("btn-default")
+                                    .text("Going?");
+                            })
+                            .fail(function() {
+                                alert("Something failed");
+                            });
+                    }
                 });
 
                 $(".js-toggle-follow").click(function(e) {
                     var button = $(e.target);
-                    $.post("/api/followings", { followeeId: button.attr("data-user-id") })
-                        .done(function() {
-                            button.text("Following");
-                        })
-                        .fail(function() {
-                            alert("Something failed!");
-                        });
+                    if (button.hasClass("btn-default")) {
+                        $.post("/api/followings", { followeeId: button.attr("data-user-id") })
+                            .done(function() {
+                                button
+                                    .removeClass("btn-default")
+                                    .addClass("btn-danger")
+                                    .text("Following");
+                            })
+                            .fail(function() {
+                                alert("Something failed!");
+                            });
+                    } else {
+                        $.ajax({
+                                url: "/api/Following/" + button.attr("data-user-id"),
+                                method: "DELETE"
+                            })
+                            .done(function() {
+                                button
+                                    .removeClass("btn-danger")
+                                    .addClass("btn-default")
+                                    .text("Follow");
+                            })
+                            .fail(function() {
+                                alert("Something failed");
+                            });
+                    }
                 });
             });
         </script>

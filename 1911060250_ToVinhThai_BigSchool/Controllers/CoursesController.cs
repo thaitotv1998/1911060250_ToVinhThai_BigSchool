@@ -49,7 +49,7 @@ namespace _1911060250_ToVinhThai_BigSchool.Controllers
             };
             _dbContext.Courses.Add(course);
             _dbContext.SaveChanges();
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("Mine","Courses");
         }
 
         [Authorize]
@@ -74,11 +74,34 @@ namespace _1911060250_ToVinhThai_BigSchool.Controllers
         }
 
         [Authorize]
+        public ActionResult Following()
+        {
+            var userId = User.Identity.GetUserId();
+
+            var courses = _dbContext.Courses
+                .Where(a => a.LecturerId == _dbContext.Followings.FirstOrDefault(b => b.FolloweeId == a.LecturerId).FolloweeId &&
+                            _dbContext.Followings.FirstOrDefault(b => b.FollowerId == userId).FollowerId == userId
+                )
+                .Include(l => l.Lecturer)
+                .Include(l => l.Category)
+                .Where(a => a.IsCanceled == false)
+                .ToList();
+
+            var viewModel = new CourseViewModel
+            {
+                UpcommingCourses = courses,
+                ShowAction = User.Identity.IsAuthenticated
+            };
+
+            return View(viewModel);
+        }
+
+        [Authorize]
         public ActionResult Mine()
         {
             var userId = User.Identity.GetUserId();
             var courses = _dbContext.Courses
-                .Where(c => c.LecturerId == userId && c.DateTime > DateTime.Now)
+                .Where(c => c.LecturerId == userId && c.DateTime > DateTime.Now && c.IsCanceled==false)
                 .Include(l => l.Lecturer)
                 .Include(c => c.Category)
                 .ToList();
