@@ -19,10 +19,11 @@ namespace _1911060250_ToVinhThai_BigSchool.Controllers
             _dbContext = new ApplicationDbContext();
         }
 
+        [HttpPost]
         public IHttpActionResult Follow(FollowingDto followingDto)
         {
             var userId = User.Identity.GetUserId();
-            if (_dbContext.Followings.Any(f => f.FollowerId == userId && f.FollowerId == followingDto.FollweeId))
+            if (_dbContext.Followings.Any(f => f.FollowerId == userId && f.FolloweeId == followingDto.FollweeId))
                 return BadRequest("Following already exists!");
 
             var following = new Following
@@ -42,7 +43,7 @@ namespace _1911060250_ToVinhThai_BigSchool.Controllers
         {
             var userId = User.Identity.GetUserId();
             var following = _dbContext.Followings
-                .SingleOrDefault(a => a.FollowerId == userId && a.FollowerId == id);
+                .SingleOrDefault(a => a.FollowerId == userId && a.FolloweeId == id);
             if (following == null)
                 return NotFound();
             _dbContext.Followings.Remove(following);

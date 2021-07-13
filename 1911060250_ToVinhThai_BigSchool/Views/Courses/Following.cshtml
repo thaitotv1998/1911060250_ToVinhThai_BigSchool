@@ -5,26 +5,31 @@
 }
 
 <h2>Following</h2>
-<ul class="course">
-@foreach (var course in Model.UpcommingCourses)
-{
-    <li>
-    <div class="date">
-        <div class="month">
-            @course.DateTime.ToString("MM")
-        </div>
-        <div class="day">
-            @course.DateTime.ToString("dd")
-        </div>
-    </div>
-    <div class="details">
-        <span class="lecturer">
-            @course.Lecturer.Name
-        </span>
-        <span class="category">
-            @course.Category.Name
-        </span>
-    </div>
-    </li>
-}
-</ul>
+<div class="row">
+    <ul class="course">
+        @foreach (var course in Model.UpcommingCourses)
+        {
+            <li>
+                <div class="date">
+                    <div class="month">
+                        @course.DateTime.ToString("MM")
+                    </div>
+                    <div class="day">
+                        @course.DateTime.ToString("dd")
+                    </div>
+                </div>
+                <div class="details">
+                    <span class="lecturer">
+                        @course.Lecturer.Name
+
+                    </span>
+                    <br />
+                    <span class="category">
+                        @course.Category.Name
+                    </span>
+
+                </div>
+            </li>
+        }
+    </ul>
+</div>
