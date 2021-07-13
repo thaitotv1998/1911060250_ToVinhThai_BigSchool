@@ -1,14 +1,18 @@
-﻿@model _1911060250_ToVinhThai_BigSchool.ViewModels.CourseViewModel
+﻿@using _1911060250_ToVinhThai_BigSchool.Models
+@using Microsoft.AspNet.Identity
+@model _1911060250_ToVinhThai_BigSchool.ViewModels.CourseViewModel
 @{
     ViewBag.Title = "Attending";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Attending</h2>
+<h2>ATTENDING</h2>
 
 <ul class="course">
     @foreach (var course in Model.UpcommingCourses)
     {
+        var userId = @User.Identity.GetUserId();
+        ApplicationDbContext _dbContext = new ApplicationDbContext();
         <li>
             <div class="date">
                 <div class="month">
@@ -21,7 +25,20 @@
             <div class="details">
                 <span class="lecturer">
                     @course.Lecturer.Name
-                </span><br/>
+                    @if (Model.ShowAction)
+                    {
+                        bool isGoing = _dbContext.Followings.Any(a => a.FollowerId == userId && a.FolloweeId == course.LecturerId);
+
+                        if (isGoing)
+                        {
+                            <button class="btn btn-danger btn-sm js-toggle-follow" data-user-id="@course.LecturerId">Following</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-default btn-sm js-toggle-follow" data-user-id="@course.LecturerId">Follow</button>
+                        }
+                    }
+                </span><br />
                 <span class="category">
                     @course.Category.Name
                 </span>
@@ -30,5 +47,40 @@
     }
 </ul>
 
+@section scripts
+{
+    <script>
+        $(".js-toggle-follow").click(function(e) {
+            var button = $(e.target);
+            if (button.hasClass("btn-default")) {
+                $.post("/api/followings", { followeeId: button.attr("data-user-id") })
+                    .done(function() {
+                        button
+                            .removeClass("btn-default")
+                            .addClass("btn-danger")
+                            .text("Following");
+
+                    })
+                    .fail(function() {
+                        alert("Something failed");
+                    });
+            } else {
+                $.ajax({
+                        url: "/api/Followings/" + button.attr("data-user-id"),
+                        method: "DELETE"
+                    })
+                    .done(function() {
+                        button
+                            .removeClass("btn-danger")
+                            .addClass("btn-default")
+                            .text("Follow");
+                    })
+                    .fail(function() {
+                        alert("Something failed");
+                    });
+            }
+        });
+    </script>
+}
 
 

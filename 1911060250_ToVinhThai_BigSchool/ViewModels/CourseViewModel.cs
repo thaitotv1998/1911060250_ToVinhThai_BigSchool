@@ -33,6 +33,8 @@ namespace _1911060250_ToVinhThai_BigSchool.ViewModels
 
         public DateTime GeDateTime()
         {
+            if (Date is null && Time is null)
+                return DateTime.Now;
             return DateTime.Parse(string.Format("{0} {1}", Date, Time));
         }
     }

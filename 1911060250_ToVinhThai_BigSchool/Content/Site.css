@@ -16,16 +16,10 @@
     white-space: normal;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
-/*input,
-select,
-textarea {
-    max-width: 280px;
-}*/
 
 /*Custom*/
 .navbar-inverse {
-    background-color: coral;
+    background-color:cornflowerblue;
     border-color: azure;
 }
 .navbar-inverse .navbar-nav > li >a {
@@ -48,7 +42,7 @@ textarea {
 
 .course > li .date {
     text-align: center;
-    background-color:coral;
+    background-color:navy;
     color: white;
     width: 60px;
     border-radius: 8px;
